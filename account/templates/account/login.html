@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<style>
+/* styles.css */
+
+/* Style the form container */
+.main {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style form labels */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* Style form input fields */
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Style the help text */
+.helptext {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Style form submit button */
+.button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Style error messages */
+.error-list {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.error-list li {
+    margin-bottom: 5px;
+}
+
+</style>
+
+<div class="main">
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        
+        <!-- Display form errors -->
+        {% if form.errors %}
+        <div class="error-list">
+            <ul>
+                {% for field in form %}
+                    {% if field.errors %}
+                    <li><strong>{{ field.label }}:</strong> {% for error in field.errors %} <span>{{ error }}</span> {% endfor %}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        <!-- Form fields -->
+        {% for fm in form %}
+            <div class="form-field">
+                {{ fm.label_tag }}
+                {{ fm }}
+            </div>
+        {% endfor %}
+
+        <!-- Display general messages -->
+        {% if messages %}
+        <div class="message">
+            {% for message in messages %}
+                <small {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</small>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Submit button -->
+        <button type="submit" class="button">Submit</button>
+    </form>
+</div>
+
+{% endblock content %}
