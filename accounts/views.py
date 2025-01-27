@@ -32,7 +32,7 @@ def registration(request):
             return redirect('login')
     else:
         fm = RegistrationForm()
-    return render(request, 'account/registration.html',{'form' : fm} )
+    return render(request, 'accounts/registration.html',{'form' : fm} )
 # Replace with your actual User model path
 
 
@@ -88,7 +88,7 @@ def user_login(request):
     else:
         form = CustomAuthenticationForm()
 
-    return render(request, 'account/login.html', {'form': form})
+    return render(request, 'accounts/login.html', {'form': form})
 
 
 
