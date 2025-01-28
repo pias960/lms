@@ -1,9 +1,14 @@
 from django.urls import path
-
-from .views import * 
+from . import views
 
 urlpatterns = [
-    path('', home, name='home'),
-   
-
+    path('', views.home, name='home'),
+    path('courses/', views.course_list, name='course_list'),
+    path('course/<int:course_id>/', views.course_detail, name='course_detail'),
+    path('course/<int:course_id>/enroll/', views.enroll_course, name='enroll_course'),
+    path('course/<int:course_id>/payment/', views.payment, name='payment'),
+    path('assignment/<int:assignment_id>/submit/', views.submit_assignment, name='submit_assignment'),
+    path('metarials/<int:course_id>/',views.metarials, name='metarials'),
+    path('dashbord/', views.dashboard, name='dashboard'),
+    path('user_course_list/', views.user_coure_list, name='user_course_list')
 ]

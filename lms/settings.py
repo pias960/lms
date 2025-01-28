@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.sites',  # for allauth
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third-party Apps
-    'jazzmin',
+   
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -69,7 +70,7 @@ ROOT_URLCONF = 'lms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

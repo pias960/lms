@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ course.title }}</h1>
+{% if course.image.urls%}
+<img src="{{course.image.urls}}" alt="Course Image"> 
+{% endif %} 
+<p>{{ course.description }}</p>
+<p><strong>Duration:</strong> {{ course.duration }}</p>
+<p><strong>Price:</strong> {{ course.price }}</p>
+<p><strong>Category:</strong> {{ course.category.name }}</p>
+
+{% if is_enrolled %}
+    <h2>Materials</h2>
+        <p><a href="{% url 'metarials' course.id %}">Course Videos</a></p>
+ 
+
+    <h2>Assignments</h2>
+    {% for assignment in assignments %}
+        <p>{{ assignment.title }} (Due: {{ assignment.due_date }})</p>
+        <a href="{% url 'submit_assignment' assignment.id %}" class="btn btn-secondary">Submit Assignment</a>
+    {% endfor %}
+
+{% else %}
+    {% if course.is_free %}
+        <a href="{% url 'enroll_course' course.id %}" class="btn btn-success">Enroll for Free</a>
+    {% else %}
+        <a href="{% url 'payment' course.id %}" class="btn btn-success">Make Payment</a>
+    {% endif %}
+
+
+{% endif %}
+{% endblock %}

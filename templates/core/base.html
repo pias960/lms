@@ -14,7 +14,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <title>My Django App</title>
+<title>{% block title %}{% endblock %}</title>
     <style>
         /* Custom Styling */
         body {
@@ -72,9 +72,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}" >Home</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'course_list' %}" >Courses</a>
+                    </li>
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="">dashboard</a>
+                        <a class="nav-link" href="{% url 'dashboard' %}">dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">logout</a>

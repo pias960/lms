@@ -4,7 +4,7 @@ from .views import *
 from django.contrib.auth.decorators import  login_required
 from django.contrib.auth.views import PasswordChangeDoneView,PasswordResetConfirmView,PasswordResetDoneView,PasswordChangeView ,PasswordResetCompleteView,PasswordResetView
 urlpatterns = [
-    path('', registration, name='reg'),
+    path('reg/', registration, name='reg'),
     #for user login
     path('login/', user_login, name='login'),
     #for check the email
