@@ -1,0 +1,131 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+    <!-- Slider Area -->
+    <div class="slider-area">
+        <div class="pages-title">
+            <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center" style="background-image: url('/static/assets/img/bg/others_bg.jpg'); background-size: cover; background-position: center;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12 text-center">
+                            <div class="slider-content slider-content-breadcrumb">
+                                <h1 class="white-color f-700">Assignments</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Slider End -->
+    
+    {% if assignments %}
+    <div class="events-area gray-bg pt-100 pb-70">
+        <div class="container">
+            <div class="events-list">
+                <div class="row">
+                    {% for i in assignments %}
+                    <div class="col-xl-6 col-lg-6 col-md-6">
+                        <div class="single-events mb-30">
+                            <div class="events-wrapper events-wrapper-padding">
+                                <div class="events-inner d-flex">
+                                    <div class="events-text white-bg">
+                                        <div class="event-text-heading mb-20">
+                                            <div class="events-calendar text-center f-left">
+                                                <span class="date">{{ i.uploaded_at.day }}</span>
+                                                <span class="month">{{ i.uploaded_at|date:"F Y" }}</span>
+                                            </div>
+                                            <div class="events-text-title clearfix">
+                                                <a href="#">
+                                                    <h4>{{ i.title }}</h4>
+                                                </a>
+                                                <div class="time-area">
+                                                    <span class="ti-time"></span>
+                                                    <span class="published-time">{{ i.uploaded_at }} to {{ i.due_date }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="events-para">
+                                            <p>{{ i.description | truncatechars:20 }}</p>
+                                        </div>
+                                        <div class="events-speaker">
+                                            <h2>Teacher: <span>{{ i.course.teacher.username }}</span></h2>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal{{ i.id }}">
+                                            Submit Assignment
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals for Assignment Submission -->
+    {% for i in assignments %}
+    <div class="modal fade" id="uploadModal{{ i.id }}" tabindex="-1" aria-labelledby="uploadModalLabel{{ i.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel{{ i.id }}">Submit Assignment for {{ i.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'submit_assignment' i.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="assignmentFile{{ i.id }}" class="form-label">Upload your assignment file</label>
+                            <input class="form-control" type="file" id="assignmentFile{{ i.id }}" name="file" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <!-- Pagination -->
+    <div class="row">
+        <div class="col-xl-12 text-center">
+            <div class="single-events-btn mt-15 mb-30">
+                <nav class="course-pagination mb-30" aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" href="#"><span class="ti-angle-left"></span></a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">4</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#"><span class="ti-angle-right"></span></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    {% else %}
+    <div class="container text-center py-5">
+        <p>No assignments available.</p>
+    </div>
+    {% endif %}
+    
+    <!-- Bootstrap JS (required for modal functionality) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+{% endblock %}

@@ -1,0 +1,272 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+    <!-- slider-start -->
+    <div class="slider-area">
+        <div class="pages-title">
+            <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center" style="background-image: url(/static/assets/img/bg/others_bg.jpg);">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="slider-content slider-content-breadcrumb text-center">
+                                <h1 class="white-color f-700">Video Details</h1>
+                                <nav class="text-center" aria-label="breadcrumb">
+                                    <ol class="breadcrumb justify-content-center">
+                                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Course Details</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- slider-end -->
+    <div class="course-details-area gray-bg pt-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-8 col-lg-8">
+                    <div class="single-course-details-area mb-30">
+                        <div class="course-details-thumb">
+                            {% if metarial.file %}
+                            <video id="player" playsinline controls poster='{{ metarial.image.url }}'>
+                                <source src="{{ metarial.file.url }}" type="video/mp4" />
+                            </video>
+                        {% else %}
+                            <p>No video available</p>
+                        {% endif %}
+                        </div>
+                        <div class="single-course-details white-bg">
+                            <div class="course-details-title mb-20">
+                                <h1>{{metarial.title}}</h1>
+                            </div>
+                            <div class="course-details-tabs">
+                                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Overview</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Syllabus</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Advisor</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="pills-reviews-tab" data-toggle="pill" href="#pills-reviews" role="tab" aria-controls="pills-contact" aria-selected="false">Reviews</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="pills-tabContent">
+                                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                        <div class="course-details-overview-top">
+                                        <p class="course-details-overview-para">{{metarial.description}}</p>
+                                           
+                                        </div>
+                                        <div class="course-details-overview-bottom d-flex justify-content-between mt-25">
+                                            <div class="course-overview-info-left">
+                                                <div class="course-overview-info-advisor mt-10">
+                                                    <span class="gray-color">Advisor : <span class="primary-color">Imran Faragi Pias</span></span>
+                                                </div>
+                                                <div class="course-overview-student-lecture mt-10">
+                                                    <span class="gray-color">Students : <span class="primary-color">{{metarial.course.students}}</span></span>
+                                                    <span class="student-lecture-number gray-color">Lectures: <span class="primary-color">35</span></span>
+                                                </div>
+                                                <div class="course-overview-time-delay mt-10">
+                                            <span class="gray-color">Time : <span class="primary-color">{{metarial.duration}}</span></span>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                                        <div class="course-details-adivisor-info mt-30">
+                                            <div class="course-details-adivisor-wrapper">
+                                                <div class="course-details-adivisor-inner d-flex">
+                                                    <div class="adivisor-thumb">
+                                                        <img src="/static/assets/img/courses/advisors_thumb.jpg" alt="">
+                                                    </div>
+                                                    <div class="adivisor-text white-bg">
+                                                        <div class="adivisor-text-heading d-flex mb-10">
+                                                            <div class="adivisor-text-title">
+                                                                <h4>{{metarial.course.teacher.username}}</h4>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="adivisor-para">
+                                                            <p>{{metarial.course.teacher.profile.bio | default:'A Proffesional Skilled Teacher'}}</p>
+                                                        </div>
+                                                        {% comment %} <div class="advisors-social-icon-list">
+                                                            <ul>
+                                                                <li><a href="#"><span class="ti-facebook"></span></a></li>
+                                                                <li><a href="#"><span class="ti-twitter-alt"></span></a></li>
+                                                                <li><a href="#"><span class="ti-dribbble"></span></a></li>
+                                                                <li><a href="#"><span class="ti-google"></span></a></li>
+                                                                <li><a href="#"><span class="ti-pinterest"></span></a></li>
+                                                            </ul>
+                                                        </div> {% endcomment %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-4">
+                    <div class="courses-details-sidebar-area">
+                        
+                        {% comment %} <div class="widget mb-40 widget-padding white-bg">
+                            <h4 class="widget-title">Category</h4>
+                            <div class="widget-link">
+                                <ul class="sidebar-link">
+                                    {% for i in categorys %}
+                                    <li>
+                                        <a href="{% url 'course_list' %}">{{i.name}}</a>
+                                        <span>{{i.course.count}}</span>
+                                    </li>
+                                    {% endfor %}
+                                    
+                                </ul>
+                            </div>
+                        </div> {% endcomment %}
+           
+                        {% comment %} <div class="widget mb-40 widget-padding white-bg">
+                            <h4 class="widget-title">Recent Course</h4>
+                            <div class="sidebar-rc-post">
+                                <ul>
+                                    {% for course in courses %}
+                                    <li>
+                                        <div class="sidebar-rc-post-main-area d-flex mb-20">
+                                            <div class="rc-post-thumb">
+                                                <a href="blog-details.html">
+                                                    {% if course.image %}
+                                                    <img src="{{course.image.urls}}" alt="">
+                                                    {% else %}
+                                                    <img src="/static/assets/img/courses/rcourses_thumb01.png" alt="">
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                            <div class="rc-post-content">
+                                                <h4>
+                                                    <a href="{% url 'course_detail' course.id %}">{{course.title}}</a>
+                                                </h4>
+                                                <div class="widget-advisors-name">
+                                                    <span>Advisor : <span class="f-500">Md Pias</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                    
+                                </ul>
+                            </div>
+                        </div> {% endcomment %}
+                        <div class="widget mb-40 widget-padding white-bg">
+                            <h4 class="widget-title">Recent Course</h4>
+                            <div class="widget-tags clearfix">
+                                <ul class="sidebar-tad clearfix">
+                                    <li>
+                                        <a href="#">CSE</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Business</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Study</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">English</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Education</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Engineering</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Advisor</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% comment %} </div> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if is_enrolled %}
+    <!-- courses start -->
+    
+    <div class="courses-area courses-bg-height gray-bg pt-60 pb-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                    <div class="section-title mb-50 text-center">
+                        <div class="section-title-heading mb-20">
+                            <h1 class="primary-color">Assignments</h1>
+                        </div>
+                        <div class="section-title-para">
+                            <p>Belis nisl adipiscing sapien sed malesu diame lacus eget erat Cras mollis scelerisqu Nullam arcu liquam here was consequat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if assignments %}
+            <div class="courses-list">
+                <div class="row">
+                    {% for i in assignments %}
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="courses-wrapper courses-wrapper-3 mb-30">
+                            <div class="courses-content courses-content-3 clearfix">
+                                <div class="courses-heading mt-25 d-flex">
+                                    <div class="course-title-3">
+                                        <h1><a href="#">{{i.title}}</a></h1>
+                                    </div>
+                                    
+                                   
+    
+                                </div>
+                              
+                                <div class="courses-wrapper-bottom clearfix mt-35">
+                                    <div class="courses-button">
+                                        <a href="{% url 'submit_assignment' i.id %}">Submit Assignment</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No assignments available.</p>
+                {% endif %}
+
+
+                {% comment %} <div class="courses-view-more-area mt-20 mb-30 text-center">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="courses-view-more-btn">
+                               <a href="{% url 'course_list' %}"> <button class="btn gray-border-btn">view more</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </div>
+    <!-- courses end -->
+    {% endif %}
+    <!-- footer start -->
+    
+    <script>
+        const player = new Plyr('#player');
+    </script>
+    
+   {% endblock content %}

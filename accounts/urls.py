@@ -18,7 +18,7 @@ urlpatterns = [
 
     ########password change url###########
     path('password_change/',login_required( PasswordChangeView.as_view(template_name='account/passwordchange.html',
-              form_class=PasswordChangeForm, success_url='passswordchangedone')), name='passwordchange'),
+              form_class=PasswordChangeForm, success_url='passswordchangedone')), name='password_change'),
     
 
     path('password_reset/',PasswordResetView.as_view(template_name='account/passwordreset.html',

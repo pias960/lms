@@ -1,0 +1,283 @@
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Sikkha</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href="site.html">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/static/assets/css/animate.min.css">
+    <link rel="stylesheet" href="/static/assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="/static/assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/static/assets/css/themify-icons.css">
+    <link rel="stylesheet" href="/static/assets/css/slick.css">
+    <link rel="stylesheet" href="/static/assets/css/meanmenu.css">
+    <link rel="stylesheet" href="/static/assets/css/default.css">
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+    <link rel="stylesheet" href="/static/assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+
+</head>
+
+<body>
+    <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <!-- header-start -->
+    <header id="home">
+        <div class="header-area">
+            <!-- header-top -->
+            <div class="header-top primary-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-12">
+                            <div class="header-contact-info d-flex">
+                                <div class="header-contact header-contact-phone">
+                                    <span class="ti-headphone"></span>
+                                    <a href="tel:+8801623329513"><p class="phone-number">+0123456789</p></a>
+                                </div>
+                                <div class="header-contact header-contact-email">
+                                    <span class="ti-email"></span>
+                                    <a href="mailto:mpias3721@gmail.com"><p class="email-name">mpias3721@gmail.com</p></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="header-social-icon-list">
+                                <ul>
+                                    <li><a href="#"><span class="ti-facebook"></span></a></li>
+                                    <li><a href="#"><span class="ti-google"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /end header-top -->
+            <!-- header-bottom -->
+            <div class="header-bottom-area header-sticky" style="transition: .6s;">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-xl-2 col-lg-2 col-md-6 col-6">
+                            <div class="logo">
+                                <a href="{% url 'home' %}">
+                                    <img src="img/logo/logo.png" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xl-10 col-lg-10 col-md-6 col-6">
+                            <div class="header-bottom-icon f-right">
+                                <ul>
+                                    <li class="toggle-search-icon"><a href="#"><span class="ti-search"></span>
+                                            <div class="toggle-search-box">
+                                                <form action="#" id="searchbox">
+                                                    <input placeholder="Search" type="text">
+                                                    <button class="button-search"><span class="ti-search"></span></button>
+                                                </form>
+                                            </div>
+                                        </a>
+
+                                    </li>
+                                    {% comment %} <li class="shopping-cart"><a href="#"><span class="ti-shopping-cart"></span>
+                                            <span class="shopping-counter">0</span>
+                                        </a></li> {% endcomment %}
+                                </ul>
+                            </div>
+                            <div class="main-menu f-right">
+                                <nav id="mobile-menu" style="display: block;">
+                                    <ul>
+                                        <li>
+                                            <a href="{% url 'home' %}">Home</a>
+                                           
+                                        </li>
+                                      
+                                    
+                                       
+                                        <li>
+                                            <a href="{% url 'course_list' %}">Courses</a>
+                                            <ul class="submenu">
+                                                {% for i in categorys %}
+                                                <li>
+                                                    <a href="grid_news.html">{{i.name}}</a>
+                                                </li>
+                                                
+                                                {% endfor %}
+                                                
+                                            </ul>
+                                        </li>
+                                            {% if request.user.is_authenticated %}
+                                        <li>
+                                            <a href="#about">Dashboard</a>
+                                            <ul class="submenu">
+                                                <li>
+                                                    <a href="{% url 'user_course_list' %}">My_courses</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'logout' %}" style="color: green;">Payment Status</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'password_change' %}" style="color: blue;">Change Password</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'logout' %}" style="color: red;">Logout</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        {% else %}
+                                        <li>
+                                            <a href="{% url 'login' %}">Login</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'reg' %}">Register</a>
+                                        </li>
+                                        {% endif %}
+                                        <li>
+                                            <a href="contact_us.html">CONTACT</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mobile-menu"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /end header-bottom -->
+        </div>
+    </header>
+   {% block content %} {% endblock content %}
+    
+    
+  
+    <!-- footer start -->
+    <footer id="Contact">
+        <div class="footer-area primary-bg pt-150">
+            <div class="container">
+                <div class="footer-top pb-35">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="footer-widget mb-30">
+                                <div class="footer-logo">
+                                    <img src="img/logo/logo_2.png" alt="">
+                                </div>
+                                <div class="footer-para">
+                                    <p>Sorem ipsum dolor sit amet conse ctetur adipiscing elit, sed do eiusmod incididunt ut labore et dolore magna aliqua. Utenim ad minim veniam, quis nostrud exercition ullamco laboris nisi </p>
+                                </div>
+                                <div class="footer-socila-icon">
+                                    <span>Follow Us</span>
+                                    <div class="footer-social-icon-list">
+                                        <ul>
+                                            <li><a href="#"><span class="ti-facebook"></span></a></li>
+                                            <li><a href="#"><span class="ti-twitter-alt"></span></a></li>
+                                            <li><a href="#"><span class="ti-dribbble"></span></a></li>
+                                            <li><a href="#"><span class="ti-google"></span></a></li>
+                                            <li><a href="#"><span class="ti-pinterest"></span></a></li>
+                                            <li><a href="#"><span class="ti-instagram"></span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="footer-widget mb-30">
+                                <div class="footer-heading">
+                                    <h1>Quick Links</h1>
+                                </div>
+                                <div class="footer-menu clearfix">
+                                    <ul>
+                                        <li><a href="#">Privacy Policy</a></li>
+                                        <li><a href="#">Team Member</a></li>
+                                        <li><a href="#">Our Services</a></li>
+                                        <li><a href="#">About Us</a></li>
+                                        <li><a href="#">Contact Us</a></li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="col-xl-3 col-lg-4  col-md-6">
+                            <div class="footer-widget mb-30">
+                                <div class="footer-heading">
+                                    <h1>Contact Us</h1>
+                                </div>
+                                <div class="footer-contact-list">
+                                    <div class="single-footer-contact-info">
+                                        <span class="ti-headphone "></span>
+                                        <span class="footer-contact-list-text">+8801623329513</span>
+                                    </div>
+                                    <div class="single-footer-contact-info">
+                                        <span class="ti-email "></span>
+                                        <span class="footer-contact-list-text">mpias3721@gmail.com</span>
+                                    </div>
+                                    <div class="single-footer-contact-info">
+                                        <span class="ti-location-pin"></span>
+                                        <span class="footer-contact-list-text">Khulna,Bangladesh</span>
+                                    </div>
+                                </div>
+                                <div class="opening-time">
+                                    <span>Opening Hour</span>
+                                    <span class="opening-date">
+                                        Sun - Sat : 10:00 am - 05:00 pm
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom pt-25 pb-25">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="footer-copyright text-center">
+                                    <span><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer end -->
+
+
+    <!-- JS here -->
+    <script src="/static/assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="/static/assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/static/assets/js/popper.min.js"></script>
+    <script src="/static/assets/js/bootstrap.min.js"></script>
+    <script src="/static/assets/js/owl.carousel.min.js"></script>
+    <script src="/static/assets/js/isotope.pkgd.min.js"></script>
+    <script src="/static/assets/js/one-page-nav-min.js"></script>
+    <script src="/static/assets/js/slick.min.js"></script>
+    <script src="/static/assets/js/ajax-form.js"></script>
+    <script src="/static/assets/js/wow.min.js"></script>
+    <script src="/static/assets/js/jquery.meanmenu.min.js"></script>
+    <script src="/static/assets/js/jquery.barfiller.js"></script>
+    <script src="/static/assets/js/jquery.scrollUp.min.js"></script>
+    <script src="/static/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/static/assets/js/jquery.counterup.min.js"></script>
+    <script src="/static/assets/js/waypoints.min.js"></script>
+    <script src="/static/assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="/static/assets/js/plugins.js"></script>
+    <script src="/static/assets/js/main.js"></script>
+</body>
+
+
+</html>

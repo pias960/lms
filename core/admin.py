@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Category, Course, Enrollment, CourseMaterial, Assignment, AssignmentSubmission, Payment
+from .models import *
 
 
 
@@ -13,16 +13,22 @@ class CategoryAdmin(admin.ModelAdmin):
   
 
 
+from django.contrib.auth.models import User, Group
+
+from django.contrib.auth.models import User, Group
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'price', 'is_free', 'created_at')
+    list_display = ('title', 'category', 'price', 'is_free', 'teacher', 'created_at')
     list_filter = ('category', 'is_free')
     search_fields = ('title', 'description')
-    readonly_fields = ('created_at',)
+    readonly_fields = ('created_at',)  # Make teacher read-only in admin panel
+
     fieldsets = (
-        (None, {'fields': ('title', 'description', 'category', 'price', 'is_free')}),
-        ('Additional Info', {'fields': ('image', 'duration', 'prerequisites', 'created_at')}),
+        (None, {'fields': ('title', 'teacher','description', 'category', 'price', 'is_free')}),
+        ('Additional Info', {'fields': ('image', 'duration', 'prerequisites', 'created_at', )}),  # Added teacher
     )
+
 
 
 @admin.register(Enrollment)
@@ -67,3 +73,4 @@ class PaymentAdmin(admin.ModelAdmin):
         (None, {'fields': ('student', 'course', 'payment_method', 'transaction_id', 'is_verified','payment_status')}),
         ('Additional Info', {'fields': ('receipt', 'payment_date')}),
     )
+admin.site.register(Profile)

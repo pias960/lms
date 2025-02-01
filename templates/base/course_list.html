@@ -1,0 +1,151 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+    <!-- slider-start -->
+    <div class="slider-area">
+        <div class="page-title">
+            <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center" style="background-image: url(/static/assets/img/bg/others_bg.jpg);">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="slider-content slider-content-breadcrumb text-center">
+                                <h1 class="white-color f-700">Our Course</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- slider-end -->
+    <div class="course-details-area gray-bg pt-100 pb-70" id='commit'>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-8 col-lg-8">
+                    <div class="row">
+                        {% for course in courses %}
+                        <div class="col-xl-6 col-lg-6 col-md-6 course-item" data-category="{{ course.category.name }}">
+                            <div class="courses-wrapper courses-wrapper-3 mb-30">
+                                <div class="courses-thumb">
+                                    <a href="course_details.html"><img src="{{ course.image.url }}" alt=""></a>
+                                </div>
+                                <div class="courses-content courses-content-3 clearfix">
+                                    <div class="courses-heading mt-25 d-flex">
+                                        <div class="course-title-3">
+                                            <h1><a href="course_details.html">{{ course.name }}</a></h1>
+                                        </div>
+                                        <div class="courses-pricing-3">
+                                            <span>${{ course.price }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="courses-para mt-15">
+                                        <p>{{ course.description | truncatewords:10 }}</p>
+                                    </div>
+                                    <div class="courses-wrapper-bottom clearfix mt-35">
+                                        <div class="courses-button">
+                                            <a href="course_details.html">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                       
+                    </div>
+                    
+                </div>
+                <div class="col-xl-4 col-lg-4">
+                    <div class="courses-details-sidebar-area">
+                        <div class="widget mb-40 white-bg">
+                            <div class="sidebar-form">
+                                <form action="#">
+                                    <input name='search'  placeholder="Search course" type="text">
+                                    <button type="submit">
+                                        <i class="ti-search"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="widget mb-40 widget-padding white-bg">
+                            <h4 class="widget-title">Category</h4>
+                            <div class="widget-link">
+                                <ul class="sidebar-link">
+                                    <li>
+                                        <a href="{% url 'course_list' %}">All</a>
+                                        
+                                    </li>
+                                    {% for i in categorys %}
+                                    
+                                    <li>
+                                        <a href="{% url 'course_list' %}?category={{i.name}}">{{i.name}}</a>
+                                        <span>{{i.courses.count}}</span>
+                                    </li>
+                                    {% endfor %}
+                                  
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <nav class="course-pagination mb-30" aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-start">
+                                        {% if courses.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                                    <span class="ti-angle-left"></span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ courses.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                                    <span class="ti-arrow-left"></span>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                        
+                                        <!-- Page Number Links -->
+                                        {% for num in courses.paginator.page_range %}
+                                            {% if courses.number == num %}
+                                                <li class="page-item active">
+                                                    <a class="page-link" href="#">{{ num }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                        
+                                        {% if courses.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ courses.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                                    <span class="ti-arrow-right"></span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ courses.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                                    <span class="ti-angle-right"></span>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var targetDiv = document.getElementById("commit");
+            if (targetDiv) {
+                targetDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        });
+    </script>
+    
+   {% endblock content %}

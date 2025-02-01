@@ -15,7 +15,7 @@ def send_activiton_email(recepient_email, activistion_url):
     subject = 'Account Activision'
     from_email = settings.EMAIL_HOST_USER
     to_email = [recepient_email]
-    html_content = render_to_string('account/active_email.html', {'activition':activistion_url})
+    html_content = render_to_string('accounts/active_email.html', {'activition':activistion_url})
     text_content = strip_tags(html_content)
     email = EmailMultiAlternatives(subject,text_content,from_email,to_email)
     email.attach_alternative(html_content,'text/html')
