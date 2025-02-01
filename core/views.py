@@ -128,7 +128,7 @@ def submit_assignment(request, assignment_id):
 
 # Category-based course filtering
 
-
+@login_required
 def metarial_details(request, metarial_id):
     metarial = CourseMaterial.objects.get(id=metarial_id)
     course = metarial.course
@@ -146,11 +146,15 @@ def metarial_details(request, metarial_id):
 
 
 
+@login_required
 def user_coure_list(request):
     courses = Enrollment.objects.filter(student=request.user) 
-
-    return render(request, 'core/user_course_list.html', {
-        'courses': courses
+    paginator = Paginator(courses, 6)  # Show 6 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'base/user_course_list.html', {
+        'courses': courses,
+        'page_obj': page_obj
         })
 
 def dashboard(request):
@@ -159,19 +163,28 @@ def dashboard(request):
     # total_payments = Payment.objects.filter(student=request.user).aggregate(total=Sum('amount'))
     return render(request, 'core/dashboard.html')
 
-@is_enrolled
+@login_required
 def metarial_list(request, course_id):
     course = Course.objects.get(id=course_id)
-    metarials = CourseMaterial.objects.filter(course=course).values('id','title', 'duration','image','description','uploaded_at')
+    metarials = CourseMaterial.objects.filter(course=course).only('id','title', 'duration','image','description','uploaded_at')
     
     paginator = Paginator(metarials, 6)  # Show 6 items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'base/metarial_list.html', {'metarials': metarials, 'course':course})
+    #check the url of image
+    m = CourseMaterial.objects.first()
+    print(m.image.url)
+
+    
+    return render(request, 'base/metarial_list.html', {'metarials': metarials, 'course':course, 'page_obj': page_obj})
 
 
-@is_enrolled
-def assignment_list(request, course_id):
-    course = Course.objects.get(id=course_id)
-    assignments = Assignment.objects.filter(course=course)
-    return render(request, 'base/assignment_list.html', {'assignments': assignments})
+@login_required
+def assignment_list(request,course_id):
+    assignments = Assignment.objects.all().order_by('-uploaded_at')  # নতুন অ্যাসাইনমেন্ট আগে দেখাবে
+    paginator = Paginator(assignments, 6)  # প্রতি পেজে 6টি অ্যাসাইনমেন্ট দেখাবে
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'base/assignment_list.html', {'assignments': page_obj})

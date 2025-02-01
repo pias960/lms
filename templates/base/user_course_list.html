@@ -1,10 +1,5 @@
-
-
-
-
-
 {% extends 'base/base.html' %}
-   {% block content %}
+{% block content %}
 <style>
     .events-thumb {
         display: flex;
@@ -43,14 +38,15 @@
     
 </style>
 
+    <!-- Slider Area -->
     <div class="slider-area">
         <div class="pages-title">
-            <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center" style="background-image: url(/static/assets/img/bg/others_bg.jpg);">
+            <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center" style="background-image: url('/static/assets/img/bg/others_bg.jpg'); background-size: cover; background-position: center;">
                 <div class="container">
                     <div class="row">
-                        <div class="col-xl-12">
-                            <div class="slider-content slider-content-breadcrumb text-center">
-                                <h1 class="white-color f-700">Videos</h1>
+                        <div class="col-xl-12 text-center">
+                            <div class="slider-content slider-content-breadcrumb">
+                                <h1 class="white-color f-700">My_Courses</h1>
                             </div>
                         </div>
                     </div>
@@ -58,58 +54,50 @@
             </div>
         </div>
     </div>
-    <!-- slider-end -->
-    <!-- courses start -->
-    {% if metarials %}
+    <!-- Slider End -->
+
+    {% if page_obj %}
     <div class="course-details-area gray-bg pt-100 pb-70">
         <div class="container">
-            
             <div class="row">
                 <div class="col-xl-7 col-lg-8">
                     <div class="row">
                         <div class="col-xl-12 events-paddings">
-                            {% if page_obj %}
-                                {% for i in page_obj %}
-                                    <div class="single-events mb-30">
-                                        <div class="events-wrapper">
-                                            <div class="events-inner d-flex">
-                                                <div class="events-thumb">
-                                                    <a href="{% url 'metarials_details' i.id %}" class="image-wrapper">
-                                                        <img src="{{ i.image.url }}" alt="{{ i.title }}">
-                                                    </a>
-                                                </div>
-                                                
-                                                <div class="events-text events-text-2 white-bg">
-                                                    <div class="event-text-heading d-flex mb-20">
-                                                        <div class="events-text-title">
-                                                            <a href="{% url 'metarials_details' i.id %}">
-                                                                <h4>{{ i.title }}</h4>
-                                                            </a>
-                                                            <div class="time-area time-area-2">
-                                                                <span class="ti-timer"></span>
-                                                                <span class="published-time">{{ i.uploaded_at.date }}</span>
-                                                            </div>
+                            {% for enrollment in page_obj %}
+                                <div class="single-events mb-30">
+                                    <div class="events-wrapper">
+                                        <div class="events-inner d-flex">
+                                            <div class="events-thumb">
+                                                <a href="{% url 'course_detail' enrollment.course.id %}" class="image-wrapper">
+                                                    <img src="{{ enrollment.course.image.url }}" alt="{{ enrollment.course.title }}">
+                                                </a>
+                                            </div>
+                                            <div class="events-text events-text-2 white-bg">
+                                                <div class="event-text-heading d-flex mb-20">
+                                                    <div class="events-text-title">
+                                                        <a href="{% url 'course_detail' enrollment.course.id %}">
+                                                            <h4>{{ enrollment.course.title }}</h4>
+                                                        </a>
+                                                        <div class="time-area time-area-2">
+                                                            <span class="ti-timer"></span>
+                                                            <span class="published-time">{{ enrollment.course.uploaded_at.date }}</span>
                                                         </div>
                                                     </div>
-                                                    <div class="events-para">
-                                                        <p>I will give you a complete account of the system and expound the actual teachings</p>
-                                                    </div>
-                                                    <div class="events-view-btn mt-10">
-                                                        <a href="{% url 'metarials_details' i.id %}">View Details</a>
-                                                    </div>
+                                                </div>
+                                                <div class="events-para">
+                                                    <p>{{ enrollment.course.description|truncatechars:100 }}</p>
+                                                </div>
+                                                <div class="events-view-btn mt-10">
+                                                    <a href="{% url 'course_detail' enrollment.course.id %}">View Details</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="container text-center">
-                                    <h2>No Videos Added yet</h2>
                                 </div>
-                            {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
-    
+
                     <!-- Pagination Section -->
                     {% if page_obj.has_other_pages %}
                         <div class="row">
@@ -125,7 +113,7 @@
                                                 </a>
                                             </li>
                                         {% endif %}
-    
+
                                         <!-- Page Numbers -->
                                         {% for num in page_obj.paginator.page_range %}
                                             {% if page_obj.number == num %}
@@ -138,7 +126,7 @@
                                                 </li>
                                             {% endif %}
                                         {% endfor %}
-    
+
                                         <!-- Next Button -->
                                         {% if page_obj.has_next %}
                                             <li class="page-item">
@@ -157,19 +145,11 @@
             </div>
         </div>
     </div>
-    {% endif %}
-    
-    <div class="courses-view-more-area mt-20 mb-30 text-center">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="courses-view-more-btn">
-                    <a href="{% url 'assignment_list' course.id %}">
-                        <button class="btn gray-border-btn">Assignments</button>
-                    </a>
-                </div>
-            </div>
-        </div>
+{% else %}
+    <div class="container text-center">
+        <h2>No Courses Enrolled Yet</h2>
     </div>
+{% endif %}
+
     
     {% endblock content %}
-    
