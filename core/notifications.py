@@ -15,3 +15,7 @@ def send_notification(sender,instance,created, **kwrgs):
         message = f"Your payment for the course '{instance.course.title}' has failed."
         Notification.objects.create(user=instance.student, message=message)
 
+
+
+
+

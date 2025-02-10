@@ -13,6 +13,8 @@ urlpatterns = [
     path('user_course_list/', views.user_coure_list, name='user_course_list'),
     path('vedio_list/<int:course_id>', views.metarial_list, name='metarial_list'),
     path('assignment_list/<int:course_id>', views.assignment_list, name='assignment_list'),
+    path('notification/', views.notifications, name="notifications"),
+    path('add_course/', views.CreateCourse.as_view(), name='add'),
 ]
 
 

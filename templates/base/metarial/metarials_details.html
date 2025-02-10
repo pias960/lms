@@ -199,6 +199,17 @@
             </div>
         </div>
     </div>
+    {% if metarial.file %}
+    <div class="courses-view-more-area mt-20 mb-30 text-center">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="courses-view-more-btn">
+                <a href="{{metarial.file.url}}" download> <button class="btn gray-border-btn"> Download</button></a>
+                </div>
+            </div>
+        </div>
+    </div> 
+    {% endif %}
     {% if is_enrolled %}
     <!-- courses start -->
     

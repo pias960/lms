@@ -33,6 +33,8 @@ class Course(models.Model):
     is_free = models.BooleanField(default=False)
     rating = models.CharField(default=4, max_length=1,blank=True, null=True)
     tags = models.CharField(max_length=25, default='',blank=True, null=True)
+    
+    url = models.URLField(max_length=200, null=True, blank=True, help_text='')
 
    
 

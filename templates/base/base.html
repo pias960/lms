@@ -27,7 +27,25 @@
     <link rel="stylesheet" href="/static/assets/css/responsive.css">
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-
+<style>
+    .notification-nav {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .notification-counter {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: green;
+        color: white;
+        font-size: 8px;
+        font-weight: bold;
+        padding: 2px 4px;
+        border-radius: 50%;
+    }
+    
+</style>
 </head>
 
 <body>
@@ -91,9 +109,18 @@
                                         </a>
 
                                     </li>
-                                    {% comment %} <li class="shopping-cart"><a href="#"><span class="ti-shopping-cart"></span>
-                                            <span class="shopping-counter">0</span>
-                                        </a></li> {% endcomment %}
+                                   {% if request.user.is_authenticated %}
+                                   <li class="notification-nav">
+                                    <a href="{% url 'notifications' %}">
+                                        <span class="ti-bell"></span>
+                                        {%if notifications %}
+                                        <span class="notification-counter">{{notifications}}</span>
+                                         {% endif %}
+                                    </a>
+                                </li>
+                                   {% endif %}
+                                   
+                                    
                                 </ul>
                             </div>
                             <div class="main-menu f-right">
@@ -122,6 +149,11 @@
                                         <li>
                                             <a href="#about">Dashboard</a>
                                             <ul class="submenu">
+                                                {% if is_teacher %}
+                                                 <li>
+                                                    <a href="{% url 'add' %}">Course add</a>
+                                                </li>
+                                                {% endif %}
                                                 <li>
                                                     <a href="{% url 'user_course_list' %}">My_courses</a>
                                                 </li>

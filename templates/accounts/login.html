@@ -1,197 +1,106 @@
-{% extends 'core/base.html' %}
-
-{% load socialaccount %}
-
-
-
-
-
+{% extends 'base/base.html' %}
 {% block content %}
-<style>
-/* Your existing styles */
-
-/* Container for the form */
-.main {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    opacity: 0; /* Start with hidden form for animation */
-}
-
-/* Form field styling */
-.form-field {
-    margin-bottom: 16px;
-    opacity: 0; /* Start with hidden input fields */
-    transform: translateY(20px); /* Slight downward movement for smooth entry */
-}
-
-/* Submit button */
-.button {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 20px;
-    width: 100%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-}
-
-.button:hover {
-    background-color: #0056b3;
-}
-
-/* Social login buttons */
-.social-button {
-    padding: 12px;
-    width: 100%;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    margin-top: 20px;
-    font-size: 16px;
-}
-
-.google-button {
-    background-color: #db4437;
-    color: white;
-}
-
-.google-button:hover {
-    background-color: #c1351d;
-}
-
-/* Icon styling */
-.google-button img {
-    margin-right: 10px;
-    width: 20px;
-    height: 20px;
-}
-
-/* Error message styling */
-.error-list {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 16px;
-}
-
-.error-list li {
-    margin-bottom: 5px;
-}
-
-</style>
-
-<h1>Welcome to the Login Page</h1>
-
-<div class="main" id="login-form">
-    <form action="" method="post" novalidate>
-        {% csrf_token %}
-        
-        <!-- Display form errors -->
-        {% if form.errors %}
-        <div class="error-list">
-            <ul>
-                {% for field in form %}
-                    {% if field.errors %}
-                    <li><strong>{{ field.label }}:</strong> {% for error in field.errors %} <span>{{ error }}</span> {% endfor %}</li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-        
-        <!-- Form fields -->
-        {% for fm in form %}
-            <div class="form-field">
-                {{ fm.label_tag }}
-                {{ fm }}
+{% load socialaccount %}
+<!-- slider-start -->
+<div class="slider-area">
+    <div class="page-title">
+        <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center"
+            style="background-image: url(/static/assets/img/bg/others_bg.jpg);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="slider-content slider-content-breadcrumb text-center">
+                            <h1 class="white-color f-700">Login</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
-        {% endfor %}
-
-        <!-- Display general messages -->
-        {% if messages %}
-        <div class="message">
-            {% for message in messages %}
-                <small {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</small>
-            {% endfor %}
         </div>
-        {% endif %}
+    </div>
+</div>
+<!-- slider-end -->
 
-        <!-- Submit button -->
-        <button type="submit" class="button">Submit</button>
-    </form>
-
-    <!-- Google login button with icon -->
-    <a href="{% provider_login_url 'google' %}" class="social-button google-button">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_icon_%282013-2019%29.svg" alt="Google Logo">
-        Login with Google
-    </a>
+<div id='commit' style="padding-top: 50px; text-align: center;">
+    <h1>Login</h1>
 </div>
 
+<div class="advisors-area gray-bg pt-95 pb-70">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-8 offset-xl-2">
+                <div class="events-details-form faq-area-form mb-30 p-100">
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
 
+                            <!-- General Form Errors -->
+                            {% if form.non_field_errors %}
+                            <div class="col-xl-12">
+                                <div class="alert alert-danger error-msg">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            </div>
+                            {% endif %}
 
+                            <!-- Username/Email Field -->
+                            <div class="col-xl-12">
+                                <input placeholder="Username or Email:" type="text" name="username" required>
+                                {% if form.username.errors %}
+                                    <div class="text-danger">
+                                        {{ form.username.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
 
+                            <!-- Password Field -->
+                            <div class="col-xl-12">
+                                <input placeholder="Password:" type="password" name="password" required>
+                                {% if form.password.errors %}
+                                    <div class="text-danger">
+                                        {{ form.password.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Login Button -->
+                            <div class="col-xl-12">
+                                <div class="faq-form-btn events-form-btn text-center">
+                                    <button type="submit" class="btn m-0">Login</button>
+                                </div>
+
+                                <!-- Google Sign-In Button -->
+                                <div class="text-center mt-3">
+                                    <a href="{% url 'social:begin' 'google' %}" class="btn btn-danger">
+                                        <i class="fab fa-google"></i> Sign in with Google
+                                    </a>
+                                </div>
+
+                                <!-- Links -->
+                                <div class="text-center mt-2">
+                                    <a href="{% url 'password-reset' %}">Forgot Password?</a><br>
+                                    <a href="{% url 'reg' %}">Don't have an account? Sign Up</a>
+                                </div>
+                            </div>
+                            <a href="{% provider_login_url 'google' %}" class="btn btn-danger">
+                                <i class="fab fa-google"></i> Sign in with Google
+                            </a>
+                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Smooth Scroll to Form -->
 <script>
-// GSAP Animation for form elements
-$(document).ready(function() {
-    // Fade in the main form container
-    gsap.to(".main", { opacity: 1, duration: 1, delay: 0.5 });
-    
-    // Animate form fields with a staggered effect (for smooth entry)
-    gsap.to(".form-field", {
-        opacity: 1, 
-        y: 0, 
-        stagger: 0.1, 
-        duration: 0.5, 
-        delay: 1
+    document.addEventListener("DOMContentLoaded", function () {
+        var targetDiv = document.getElementById("commit");
+        if (targetDiv) {
+            targetDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
     });
-    
-    // Animation for the submit button
-    gsap.from(".button", { opacity: 0, y: 20, duration: 0.5, delay: 1.5 });
-    
-    // Google button animation (scale effect)
-    gsap.from(".google-button", {
-        opacity: 0,
-        scale: 0.8,
-        duration: 0.5,
-        delay: 2,
-        ease: "bounce.out"
-    });
-
-    // Form submission handling with SweetAlert
-    $('form').on('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission for demo purposes
-
-        // Simulate a successful form submission (for demonstration purposes)
-        Swal.fire({
-            icon: 'success',
-            title: 'Logged in successfully!',
-            text: 'You will be redirected shortly.',
-            confirmButtonText: 'Ok'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Actually submit the form (after SweetAlert)
-                this.submit();
-            }
-        });
-    });
-
-    // Enhanced error handling with SweetAlert
-    {% if form.errors %}
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'There were some errors with your submission. Please check the fields.',
-            confirmButtonText: 'Try again'
-        });
-    {% endif %}
-});
 </script>
-{% endblock content %}
+
+{% endblock %}

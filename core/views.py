@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Course, Enrollment, CourseMaterial, Assignment, AssignmentSubmission, Payment, Category
+from .models import *
 from .forms import PaymentForm, AssignmentSubmissionForm
 from .decorators import is_enrolled
+from django.views.generic.edit import CreateView
 
 # Home page with course listing
 def home(request):
-    courses = Course.objects.all().reverse()[0:4]
+    courses = Course.objects.all().order_by('-id')[:8]
     context = {'courses' : courses}
 
     return render(request, 'base/index.html', context )
@@ -45,7 +46,7 @@ def course_list(request):
         'search_query': search_query,
     }
 
-    return render(request, 'base/course_list.html', context)
+    return render(request, 'base/course/course_list.html', context)
 
 # Course details with materials and assignments
 # Non-enrolled users can see the course details but not the materials and assignments
@@ -56,7 +57,7 @@ def course_detail(request, course_id):
     students = Enrollment.objects.filter(course=course).count()
     courses = Course.objects.order_by('-id')[:5]
     is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists() 
-    return render(request, 'base/course_details.html', {
+    return render(request, 'base/course/course_details.html', {
         'course': course,
         'courses': courses,
         'categorys' : category,
@@ -139,7 +140,7 @@ def metarial_details(request, metarial_id):
         messages.info(request, "You are not enrolled in this course.")
         return redirect('course_detail', course_id=course_id)
         
-    return render(request, 'base/metarials_details.html', { 
+    return render(request, 'base/metarial/metarials_details.html', { 
         'metarial': metarial,
         'assignments': assignment
         })
@@ -152,7 +153,7 @@ def user_coure_list(request):
     paginator = Paginator(courses, 6)  # Show 6 items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'base/user_course_list.html', {
+    return render(request, 'base/user/user_course_list.html', {
         'courses': courses,
         'page_obj': page_obj
         })
@@ -176,7 +177,7 @@ def metarial_list(request, course_id):
     print(m.image.url)
 
     
-    return render(request, 'base/metarial_list.html', {'metarials': metarials, 'course':course, 'page_obj': page_obj})
+    return render(request, 'base/metarial/metarial_list.html', {'metarials': metarials, 'course':course, 'page_obj': page_obj})
 
 
 @login_required
@@ -187,4 +188,44 @@ def assignment_list(request,course_id):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'base/assignment_list.html', {'assignments': page_obj})
+    return render(request, 'base/assignment/assignment_list.html', {'assignments': page_obj})
+
+
+
+def notifications(request):
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(user=request.user).order_by('-id')
+        notifications.update(is_read=True)
+        
+    return render(request, 'base/notifications.html', {'notification': notifications})
+
+
+
+
+##Teacher Views##
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
+
+
+# Function to check if the user is in the "Instructor" group
+def is_instructor(user):
+    return user.groups.filter(name="Teacher").exists()
+
+class CreateCourse(CreateView):
+    model = Course
+    fields = ['title', 'description', 'category', 'price', 'image', 'duration', 'prerequisites', 'tags']
+    template_name = 'base/course_add.html'
+    success_url = '/'
+
+    # Apply the decorator to restrict access
+    @method_decorator(user_passes_test(is_instructor, login_url="home"))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.teacher = self.request.user
+        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['cats'] = Category.objects.all()
+        return context

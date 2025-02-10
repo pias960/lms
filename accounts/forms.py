@@ -24,13 +24,6 @@ from django.contrib.auth.models import User
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(max_length=150, help_text="Username or email")
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Set custom labels for fields
-        self.fields['username'].label = 'Username/Email'
-        self.fields['password'].label = 'Password'
-        self.fields['username'].widget.attrs['placeholder'] = 'Enter Username or Email'
-
     def clean_username(self):
         username_email = self.cleaned_data.get('username')
         

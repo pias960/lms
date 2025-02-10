@@ -1,108 +1,88 @@
-{% extends 'core/base.html' %}
-
+{% extends 'base/base.html' %}
 {% block content %}
-<style>
-    /* styles.css */
-
-    /* Style the form container */
-    .main {
-        max-width: 400px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Style form labels */
-    label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-    }
-
-    /* Style form input fields */
-    input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 16px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    /* Style the help text */
-    .helptext {
-        font-size: 12px;
-        color: #666;
-        margin-top: 5px;
-    }
-
-    /* Style form submit button */
-    .button {
-        background-color: #007bff;
-        color: #fff;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .button:hover {
-        background-color: #0056b3;
-    }
-
-    /* Error message style */
-    .error-message {
-        font-size: 14px;
-        color: red;
-        margin-top: 5px;
-        display: none;
-    }
-
-</style>
-
-<div class="main">
-    <form action="" method="post" novalidate>
-        {% csrf_token %}
-        
-        {% for field in form %}
-            <div>
-                {{ field.label_tag }}
-                {{ field }}
-                {% if field.errors %}
-                    <div class="error-message" id="error-{{ field.id_for_label }}">
-                        {{ field.errors|striptags }}
+<!-- slider-start -->
+<div class="slider-area">
+    <div class="page-title">
+        <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center"
+            style="background-image: url(/static/assets/img/bg/others_bg.jpg);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="slider-content slider-content-breadcrumb text-center">
+                            <h1 class="white-color f-700">Login</h1>
+                        </div>
                     </div>
-                {% endif %}
+                </div>
             </div>
-        {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- slider-end -->
 
-        {% if messages %}
-            {% for message in messages %}
-                <small {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</small>
-            {% endfor %}
-        {% endif %}
+<div id='commit' style="padding-top: 50px; text-align: center;">
+    <h1>Register</h1>
+</div>
+<div class="advisors-area gray-bg pt-95 pb-70">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-8 offset-xl-2">
+                <div class="events-details-form faq-area-form mb-30 p-100">
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
 
-        <button type="submit" class="button">Submit</button>
-    </form>
+                            <div class="col-xl-6">
+                                <input placeholder="Username:" type="text" name="username" required>
+                                <small class="error-msg">{{ form.username.errors }}</small>
+                            </div>
+
+                            <div class="col-xl-6">
+                                <input placeholder="Email:" type="email" name="email" required>
+                                <small class="error-msg">{{ form.email.errors }}</small>
+                            </div>
+
+                            <div class="col-xl-6">
+                                <input placeholder="Password :" type="password" name="password1" required>
+                                <small class="error-msg">{{ form.password1.errors }}</small>
+                            </div>
+
+                            <div class="col-xl-6">
+                                <input placeholder="Confirm Password :" type="password" name="password2" required>
+                                <small class="error-msg">{{ form.password2.errors }}</small>
+                            </div>
+
+                            <div class="col-xl-12">
+                                <div class="faq-form-btn events-form-btn text-center">
+                                    <button type="submit" class="btn m-0">Register</button>
+                                </div>
+                                <div class="text-center">
+                                    <a href="{% url 'login' %}">Already have an account? Sign in</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- JavaScript to auto-hide errors after 5 seconds -->
 <script>
-    // Show error messages for 5 seconds on each field
-    window.onload = function() {
-        {% for field in form %}
-            {% if field.errors %}
-                var errorElement = document.getElementById('error-{{ field.id_for_label }}');
-                if (errorElement) {
-                    errorElement.style.display = 'block';
-                    setTimeout(function() {
-                        errorElement.style.display = 'none';
-                    }, 5000);  // 5 seconds
-                }
-            {% endif %}
-        {% endfor %}
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        var targetDiv = document.getElementById("commit");
+        if (targetDiv) {
+            targetDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        // Hide error messages after 5 seconds
+        setTimeout(function () {
+            document.querySelectorAll(".error-msg").forEach(function (el) {
+                el.style.display = "none";
+            });
+        }, 5000);
+    });
 </script>
 
-{% endblock content %}
+{% endblock %}

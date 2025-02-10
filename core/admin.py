@@ -74,3 +74,7 @@ class PaymentAdmin(admin.ModelAdmin):
         ('Additional Info', {'fields': ('receipt', 'payment_date')}),
     )
 admin.site.register(Profile)
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('user','message','timestamp')
