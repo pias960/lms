@@ -1,0 +1,76 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<!-- slider-start -->
+<div class="slider-area">
+    <div class="page-title">
+        <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center"
+            style="background-image: url(/static/assets/img/bg/others_bg.jpg);">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="slider-content slider-content-breadcrumb text-center">
+                            <h1 class="white-color f-700">Activation Successful</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- slider-end -->
+
+<div id="activation-message" style="padding-top: 50px; text-align: center;">
+    <h1>Your account has been successfully activated!</h1>
+    <p>Welcome aboard! Your activation success.</p>
+</div>
+
+
+
+<!-- Button to Continue -->
+<div class="advisors-area gray-bg pt-95 pb-70">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-8 offset-xl-2">
+                <div class="faq-area-form mb-30 p-100 text-center">
+                    <a href="{% url 'login' %}" class="btn m-0">Go to login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JSAP Animation and Stickers -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Sticker animation using GSAP
+        gsap.to("#activation-sticker", {
+            opacity: 1,
+            scale: 1.2,
+            rotation: 360,
+            duration: 2,
+            ease: "bounce.out",
+            delay: 1,
+        });
+
+        // Add some fun text animation
+        gsap.from("#activation-message h1", {
+            opacity: 0,
+            x: -100,
+            duration: 1.5,
+            ease: "power3.out",
+            delay: 0.5,
+        });
+
+        gsap.from("#activation-message p", {
+            opacity: 0,
+            y: 50,
+            duration: 1.5,
+            ease: "power3.out",
+            delay: 1.2,
+        });
+    });
+</script>
+
+{% endblock %}

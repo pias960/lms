@@ -15,7 +15,16 @@ urlpatterns = [
     path('assignment_list/<int:course_id>', views.assignment_list, name='assignment_list'),
     path('notification/', views.notifications, name="notifications"),
     path('add_course/', views.CreateCourse.as_view(), name='add'),
+    path('teacher_course_list/', views.teacher_courses, name='teacher_course_list'),
+    path('courses_category/', views.courses_category, name='category_courses'),
+    path('course/<int:pk>/update/', views.TeaherCourseUpdate.as_view(), name='course_update'),
+    
+    path('course/<int:pk>/delete/', views.teacher_course_delete, name='course_delete'),
+
+    
 ]
+
+
 
 
 

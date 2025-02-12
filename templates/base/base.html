@@ -138,7 +138,8 @@
                                             <ul class="submenu">
                                                 {% for i in categorys %}
                                                 <li>
-                                                    <a href="grid_news.html">{{i.name}}</a>
+                                                    <a href="{% url 'category_courses' %}?category_name={{ i.name|urlencode }}"> {{ i.name }} </a>
+
                                                 </li>
                                                 
                                                 {% endfor %}
@@ -151,11 +152,14 @@
                                             <ul class="submenu">
                                                 {% if is_teacher %}
                                                  <li>
-                                                    <a href="{% url 'add' %}">Course add</a>
+                                                    <a href="{% url 'add' %}">Add Course</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'teacher_course_list' %}">Teacher_Courses</a>
                                                 </li>
                                                 {% endif %}
                                                 <li>
-                                                    <a href="{% url 'user_course_list' %}">My_courses</a>
+                                                    <a href="{% url 'user_course_list' %}">Enrolled_courses</a>
                                                 </li>
                                                 <li>
                                                     <a href="{% url 'logout' %}" style="color: green;">Payment Status</a>

@@ -1,0 +1,164 @@
+
+
+{% extends 'base/base.html' %}
+   {% block content %}
+<style>
+    .events-thumb {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        border-radius: 10px; /* গোলাকার করো */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* হালকা শ্যাডো */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    
+    .events-thumb .image-wrapper {
+        display: block;
+        width: 100%;
+        max-width: 300px; /* চিত্রের সর্বোচ্চ প্রস্থ */
+        overflow: hidden;
+        border-radius: 10px;
+    }
+    
+    .events-thumb img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .events-thumb:hover {
+        transform: scale(1.05); /* হোভার করলে জুম হবে */
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .events-thumb .image-wrapper:hover img {
+        transform: scale(1.1); /* হোভার করলে ইমেজ জুম হবে */
+    }
+    
+</style>
+
+    <div class="slider-area">
+        <div class="pages-title">
+            <div class="single-slider slider-height slider-height-breadcrumb d-flex align-items-center" style="background-image: url(/static/assets/img/bg/others_bg.jpg);">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="slider-content slider-content-breadcrumb text-center">
+                                <h1 class="white-color f-700">My Courses</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- slider-end -->
+    <!-- courses start -->
+   
+    <div class="course-details-area gray-bg pt-100 pb-70">
+        <div class="container">
+            
+            <div class="row">
+                <div class="col-xl-7 col-lg-8">
+                    <div class="row">
+                        <div class="col-xl-12 events-paddings">
+                            {% if page_obj %}
+                                {% for i in page_obj %}
+                                    <div class="single-events mb-30">
+                                        <div class="events-wrapper">
+                                            <div class="events-inner d-flex">
+                                                <div class="events-thumb">
+                                                    <a href="{% url 'course_detail' i.id %}" class="image-wrapper">
+                                                        <img src="{{ i.image.url }}" alt="{{ i.title }}">
+                                                    </a>
+                                                </div>
+                                                
+                                                <div class="events-text events-text-2 white-bg">
+                                                    <div class="event-text-heading d-flex mb-20">
+                                                        <div class="events-text-title">
+                                                            <a href="{% url 'course_detail' i.id %}">
+                                                                <h4>{{ i.title }}</h4>
+                                                            </a>
+                                                            <div class="time-area time-area-2">
+                                                                <span class="ti-timer"></span>
+                                                                <span class="published-time">{{ i.created_at.date }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="events-para">
+                                                        <p>I will give you a complete account of the system and expound the actual teachings</p>
+                                                    </div>
+                                                    <div class="events-para">
+                                                        <a href="{% url 'course_detail' i.id %}" >View Details</a><br>
+                                                        <a href="{% url 'course_update' i.id %}" style='color: green'>Update</a>
+                                                        <span class="text-danger" style="cursor: pointer;" data-toggle="modal" data-target="#deleteModal{{ i.id }}">Delete</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="container text-center">
+                                    <h2>No Videos Added yet</h2>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+    
+                    <!-- Pagination Section -->
+                    {% if page_obj.has_other_pages %}
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <nav class="course-pagination mb-30" aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-start">
+                                        
+                                        <!-- Previous Button -->
+                                        {% if page_obj.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                                    <i class="fas fa-chevron-left"></i>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+    
+                                        <!-- Page Numbers -->
+                                        {% for num in page_obj.paginator.page_range %}
+                                            {% if page_obj.number == num %}
+                                                <li class="page-item active">
+                                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+    
+                                        <!-- Next Button -->
+                                        {% if page_obj.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                                    <i class="fas fa-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+    {% endblock content %}
+    

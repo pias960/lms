@@ -33,6 +33,8 @@ urlpatterns = [
 
      path("password_reset_complete/", PasswordResetCompleteView.as_view(template_name='account/passwordresetcomplete.html'), 
     name="password_reset_complete"),
+    path('check_email/', activision_email_check, name='check_activision_email'),
+    path('activation_success/', activition_success, name='activation_success'),
+]
    
 
-]

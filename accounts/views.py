@@ -29,7 +29,7 @@ def registration(request):
             activition_url = f'{settings.SITE_DOMAIN}{activition_link}'
             send_activiton_email(user.email, activition_url)
             messages.success(request, 'Registration successful')
-            return redirect('login')
+            return redirect('check_activision_email')
     else:
         fm = RegistrationForm()
     return render(request, 'accounts/registration.html',{'form' : fm} )
@@ -52,8 +52,8 @@ def activision_check(request, uidb64, token):
         if default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
-            messages.success(request, 'Your account has been activated successfully.')
-            return redirect('login')
+            return redirect('activation_success')
+        
         else:
             messages.error(request, 'Invalid activation link.')
             return redirect('signup')  # Redirect to a relevant page like signup or home
@@ -103,7 +103,14 @@ def user_logout(request):
     logout(request)
     return redirect('home') 
 
+def activition_success(request):
+    return render(request, 'accounts/activation_success.html')
+
+
+def activision_email_check(request):
+    return render(request, 'accounts/activation_email_check.html')
     
+
     
     
      # Redirect to a page where you want to redirect after logout.

@@ -4,7 +4,7 @@ from django.contrib import messages
 from .models import *
 from .forms import PaymentForm, AssignmentSubmissionForm
 from .decorators import is_enrolled
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView,UpdateView,DeleteView
 
 # Home page with course listing
 def home(request):
@@ -199,6 +199,17 @@ def notifications(request):
         
     return render(request, 'base/notifications.html', {'notification': notifications})
 
+def courses_category(request):
+    category_name = request.GET.get('category_name', None)
+    courses = Course.objects.filter(category__name=category_name)
+    paginator = Paginator(courses, 6)  # Show 6 courses per page
+    page = request.GET.get('page')  # Get the current page
+    courses_page = paginator.get_page(page)  # Get the courses for the current page
+
+    return render(request, 'base/course/category_courses.html', {
+        'page_obj': courses_page,
+        'selected_category': category_name,
+    })
 
 
 
@@ -214,7 +225,7 @@ def is_instructor(user):
 class CreateCourse(CreateView):
     model = Course
     fields = ['title', 'description', 'category', 'price', 'image', 'duration', 'prerequisites', 'tags']
-    template_name = 'base/course_add.html'
+    template_name = 'base/course/course_add.html'
     success_url = '/'
 
     # Apply the decorator to restrict access
@@ -229,3 +240,62 @@ class CreateCourse(CreateView):
         context =  super().get_context_data(**kwargs)
         context['cats'] = Category.objects.all()
         return context
+
+from django.urls import reverse_lazy
+
+class TeaherCourseUpdate(UpdateView):
+    model = Course
+    fields = ['title', 'description', 'category', 'price', 'image', 'duration', 'prerequisites', 'tags']
+    template_name = 'base/course/teacher_course_update.html'
+    success_url = reverse_lazy('course_detail', kwargs={'course_id': Course.id})
+    context_object_name = 'course'
+    @user_passes_test(is_instructor, login_url="home")
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import UpdateView
+from .models import Course
+
+@method_decorator(login_required, name='dispatch')
+class TeaherCourseUpdate(UpdateView):
+    model = Course
+    fields = ['title', 'description', 'image']
+    template_name = 'base/course/teacher_course_update.html'
+    def get_success_url(self):
+        return reverse_lazy('course_detail', kwargs={'course_id': self.object.pk})
+
+    def get_queryset(self):
+        return Course.objects.filter(teacher=self.request.user)  # request.user ব্যবহার করুন
+
+    def form_valid(self, form):
+        form.instance.teacher = self.request.user
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cats'] = Category.objects.all()
+        return context
+    
+    
+   
+    
+
+@user_passes_test(is_instructor, login_url="home")
+def teacher_courses(request):
+    courses = Course.objects.filter(teacher=request.user)
+    pagination = Paginator(courses, 6)
+    page = request.GET.get('page')
+    courses = pagination.get_page(page)
+    return render(request, 'base/teacher/teacher_courses.html', {'page_obj': courses})
+
+    
+
+# Delete course
+@user_passes_test(is_instructor, login_url="home")
+def teacher_course_delete(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    course.delete()
+    messages.success(request, "Course deleted successfully.")
+    return redirect('teacher_course_list')
+
