@@ -44,21 +44,12 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
-
-
-
-
-
 import re
 from django.core.exceptions import ValidationError
 
 def PhoneNumberValidator(value):
     if not re.match(r'^\+880-1[0-9]{8}$', value):
         raise ValidationError('Invalid phone number format.')
-    
-
-
-
 
 from django.contrib.auth.models import Group
 from django.db import models
@@ -90,7 +81,6 @@ class Profile(models.Model):
         if self.is_teacher:
             group, created = Group.objects.get_or_create(name='Teachers')  
             self.user.groups.add(group)
-            
             # Ensure the TeacherProfile exists
             TeacherAccount.objects.get_or_create(user=self.user)
 
@@ -104,9 +94,6 @@ class Profile(models.Model):
 def _post_save_receiver(sender, instance,created,**kwargs):
     if created:
         Profile.objects.create(user=instance)
-
-
-
     
     
     
@@ -244,9 +231,6 @@ class Payment(models.Model):
             if hasattr(teacher, 'teacherprofile'):  # Ensure teacher has a profile
                 teacher.teacheraccount.balance += self.course.price
                 teacher.teacheraccount.save()  # Save the updated balance
-
-
-            
             # Send Payment Success Email
             subject = 'Your Payment is Verified!'
             message = f"""
@@ -264,24 +248,7 @@ class Payment(models.Model):
             recipient_email = self.student.email
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [recipient_email], fail_silently=False)
 
-        elif self.is_verified and self.payment_status == 'failed':
-            # Send Payment Failure Email
-            subject = 'Your Payment Failed!'
-            message = f"""
-    Dear {self.student.username},
-
-    We regret to inform you that your payment for the course "{self.course.title}" has failed.
-
-    Please try again or contact our customer support team for further assistance.
-
-    Best regards,
-    Imran Faragi Pias
-            """
-
-
-
-            recipient_email = self.student.email
-            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [recipient_email], fail_silently=False)
+       
 
         super().save(*args, **kwargs)  # Save the Payment object
 
@@ -322,3 +289,11 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username} - {self.message[:30]}"
+    
+
+
+class Comment(models.Model):
+    course  = models.ForeignKey(Course, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=400, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Comments')

@@ -23,6 +23,7 @@
             <div class="row">
                 <div class="col-xl-8 col-lg-8">
                     <div class="row">
+                        {%if courses %}
                         {% for course in courses %}
                         <div class="col-xl-6 col-lg-6 col-md-6 course-item" data-category="{{ course.category.name }}">
                             <div class="courses-wrapper courses-wrapper-3 mb-30">
@@ -50,7 +51,16 @@
                             </div>
                         </div>
                     {% endfor %}
-                       
+                    {% else %} 
+                    <div class="col-xl-12">
+                        <div class="courses-wrapper courses-wrapper-3 mb-30">
+                            <div class="courses-content courses-content-3 clearfix">
+                                <div class="courses-para mt-15">
+                                    <p>No course found</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}  
                     </div>
                     
                 </div>

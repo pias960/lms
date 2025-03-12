@@ -171,18 +171,27 @@ AUTHENTICATION_BACKENDS = [
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'APP': {
+            'client_id': '808992644106-dav50k4so6vtk78avi5ne9t7408836mh.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        },
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
         'OAUTH_PKCE_ENABLED': True, 
     },
-   
 }
-
-
-
 
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_URL = '/login/'
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+
+
+
+
 

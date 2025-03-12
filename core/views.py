@@ -5,13 +5,23 @@ from .models import *
 from .forms import PaymentForm, AssignmentSubmissionForm
 from .decorators import is_enrolled
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
-
+from django.db.models import Q
 # Home page with course listing
 def home(request):
     courses = Course.objects.all().order_by('-id')[:8]
-    context = {'courses' : courses}
+    if request.method == "GET":
+        query = request.GET.get('q')
+        if query:
+            courses = Course.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+        else:
+            courses = Course.objects.all().order_by('-id')[:8]
+   
+    c_count = Course.objects.count()
+    students_count = User.objects.all().count()
+    t_count = User.objects.filter(groups__name='Teacher').count()
+    
 
-    return render(request, 'base/index.html', context )
+    return render(request, 'base/index.html', {'s_count': students_count, 't_count': t_count,'courses' : courses,'c_count': c_count} )
 
 from django.core.paginator import Paginator
 from django.shortcuts import render
@@ -48,45 +58,66 @@ def course_list(request):
 
     return render(request, 'base/course/course_list.html', context)
 
-# Course details with materials and assignments
-# Non-enrolled users can see the course details but not the materials and assignments
-@login_required
+
+from django.shortcuts import render, get_object_or_404
+from .models import Course, Enrollment, Comment, Category
+
 def course_detail(request, course_id):
-    category = Category.objects.all().values('name')
+    # ক্যাটাগরি লোড
+    categories = Category.objects.values('name')
+
+    # নির্দিষ্ট কোর্স
     course = get_object_or_404(Course, id=course_id)
+
+    # ছাত্র সংখ্যা গণনা
     students = Enrollment.objects.filter(course=course).count()
-    courses = Course.objects.order_by('-id')[:5]
-    is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists() 
-    return render(request, 'base/course/course_details.html', {
+
+    # সর্বশেষ ৫টি কোর্স লোড
+    recent_courses = Course.objects.order_by('-id')[:5]
+
+    # ব্যবহারকারী কোর্সে এনরোল করেছে কিনা চেক
+    is_enrolled = request.user.is_authenticated and Enrollment.objects.filter(
+        student=request.user, course=course
+    ).exists()
+
+    # মন্তব্য সাবমিট হ্যান্ডলিং
+    if request.method == "POST" and request.user.is_authenticated:
+        comment_text = request.POST.get('text')
+        if comment_text:  # খালি কমেন্ট ব্লক করা হলো
+            Comment.objects.create(course=course, comment=comment_text, user=request.user)
+
+    # সর্বশেষ ৫টি মন্তব্য
+    comments = Comment.objects.filter(course=course).order_by('-id')[:5]
+
+    # টেমপ্লেটে ডাটা পাঠানো
+    context = {
         'course': course,
-        'courses': courses,
-        'categorys' : category,
+        'recent_courses': recent_courses,
+        'categories': categories,
         'is_enrolled': is_enrolled,
-        'students' : students,
-     
-    })
+        'students': students,
+        'comments': comments,
+    }
+
+    return render(request, 'base/course/course_details.html', context)
 
 # Enroll in a course
 @login_required
 def enroll_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-
     if course.is_free:
         Enrollment.objects.get_or_create(student=request.user, course=course)
         messages.success(request, f"Successfully enrolled in {course.title}.")
     else:
-        messages.info(request, "This course requires payment.")
         return redirect('payment', course_id=course.id)
-
     return redirect('course_detail', course_id=course.id)
 
-# Payment for a course
+
 @login_required
 def payment(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-
     if request.method == 'POST':
-        form = PaymentForm(request.POST, request.FILES,)
+        form = PaymentForm(request.POST, request.FILES)
         if form.is_valid():
             payment = form.save(commit=False)
             payment.student = request.user
@@ -94,12 +125,14 @@ def payment(request, course_id):
             payment.save()
             messages.success(request, "Payment submitted successfully. Awaiting admin verification.")
             return redirect('course_detail', course_id=course.id)
+        else:
+            messages.error(request, f"{form.errors}")
+            
     else:
-        form = PaymentForm()
-
-    return render(request, 'core/payment.html', {
-        'form': form, 
-        'course': course})
+        messages.info(request, "This course requires payment. Please complete the payment form.")
+    return render(request, 'base/payment.html', {
+        'course': course,
+    })
 
 # Submit assignment
 @login_required
@@ -168,7 +201,6 @@ def dashboard(request):
 def metarial_list(request, course_id):
     course = Course.objects.get(id=course_id)
     metarials = CourseMaterial.objects.filter(course=course).only('id','title', 'duration','image','description','uploaded_at')
-    
     paginator = Paginator(metarials, 6)  # Show 6 items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -182,9 +214,8 @@ def metarial_list(request, course_id):
 
 @login_required
 def assignment_list(request,course_id):
-    assignments = Assignment.objects.all().order_by('-uploaded_at')  # নতুন অ্যাসাইনমেন্ট আগে দেখাবে
+    assignments = Assignment.objects.filter(id=course_id).order_by('-uploaded_at')  # নতুন অ্যাসাইনমেন্ট আগে দেখাবে
     paginator = Paginator(assignments, 6)  # প্রতি পেজে 6টি অ্যাসাইনমেন্ট দেখাবে
-
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -252,6 +283,7 @@ class TeaherCourseUpdate(UpdateView):
     @user_passes_test(is_instructor, login_url="home")
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
     from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
@@ -298,4 +330,5 @@ def teacher_course_delete(request, course_id):
     course.delete()
     messages.success(request, "Course deleted successfully.")
     return redirect('teacher_course_list')
+
 

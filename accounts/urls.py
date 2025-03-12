@@ -17,21 +17,21 @@ urlpatterns = [
          name="passswordchangedone"),
 
     ########password change url###########
-    path('password_change/',login_required( PasswordChangeView.as_view(template_name='account/passwordchange.html',
+    path('password_change/',login_required( PasswordChangeView.as_view(template_name='accounts/passwordchange.html',
               form_class=PasswordChangeForm, success_url='passswordchangedone')), name='password_change'),
     
 
-    path('password_reset/',PasswordResetView.as_view(template_name='account/passwordreset.html',
+    path('password_reset/',PasswordResetView.as_view(template_name='accounts/passwordreset.html',
               form_class=passwordresetform, ), name='password-reset'),
             
-    path("password_reset/done/",PasswordResetDoneView.as_view(template_name='account/passwordresetdone.html'), 
+    path("password_reset/done/",PasswordResetDoneView.as_view(template_name='accounts/passwordresetdone.html'), 
     name="password_reset_done"),
 
 
-     path('password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='account/passwordresetconfirm.html',
+     path('password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='accounts/passwordresetconfirm.html',
               form_class=setpasswordform, ), name='password_reset_confirm'),
 
-     path("password_reset_complete/", PasswordResetCompleteView.as_view(template_name='account/passwordresetcomplete.html'), 
+     path("password_reset_complete/", PasswordResetCompleteView.as_view(template_name='accounts/passwordresetcomplete.html'), 
     name="password_reset_complete"),
     path('check_email/', activision_email_check, name='check_activision_email'),
     path('activation_success/', activition_success, name='activation_success'),

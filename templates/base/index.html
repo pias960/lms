@@ -1,5 +1,73 @@
 {% extends 'base/base.html' %}
 {% block content %}
+<style>
+    .courses-list .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px; /* Adds spacing between cards */
+        justify-content: center;
+    }
+    
+    .courses-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    .courses-thumb {
+        width: 100%;
+        height: 150px; /* Smaller image height */
+        overflow: hidden;
+    }
+    
+    .courses-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures uniform image size */
+    }
+    
+    .courses-content {
+        flex-grow: 1;
+        text-align: center;
+        padding: 10px 0;
+    }
+    
+    .courses-heading h1 {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    .courses-icon {
+        font-size: 14px;
+        color: #333;
+    }
+    
+    .price {
+        font-weight: bold;
+        color: #28a745;
+    }
+    
+    .courses-wrapper-bottom {
+        margin-top: auto;
+        text-align: center;
+        padding: 8px 0;
+    }
+    
+    .courses-button a {
+        display: inline-block;
+        background: #007bff;
+        color: #fff;
+        padding: 6px 10px;
+        font-size: 14px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+    
+    .courses-button a:hover {
+        background: #0056b3;
+    }
+    
+</style>
     <!-- slider-start -->
     <div class="slider-area pos-relative">
         <div class="slider-active">
@@ -10,7 +78,7 @@
                             <div class="slider-content slider-content-2">
                                 <h1 class="white-color f-700" data-animation="fadeInUp" data-delay=".2s">No Nation Can Prosper<br>In Life Without Education</h1>
                                 <p data-animation="fadeInUp" data-delay=".4s">Sorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor <br> incididunt ut labore et dolore magna aliqua enim ad minime.</p>
-                                <button class="btn yellow-bg-btn" data-animation="fadeInUp" data-delay=".6s">admit now</button>
+        
                             </div>
                         </div>
                     </div>
@@ -23,7 +91,7 @@
                             <div class="slider-content slider-content-2">
                                 <h1 class="white-color f-700" data-animation="fadeInUp" data-delay=".2s">No Nation Can Prosper<br>In Life Without Education</h1>
                                 <p data-animation="fadeInUp" data-delay=".4s">Sorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor <br> incididunt ut labore et dolore magna aliqua enim ad minime.</p>
-                                <button class="btn yellow-bg-btn" data-animation="fadeInUp" data-delay=".6s">admit now</button>
+                                
                             </div>
                         </div>
                     </div>
@@ -36,7 +104,7 @@
                             <div class="slider-content slider-content-2">
                                 <h1 class="white-color f-700" data-animation="fadeInUp" data-delay=".2s">No Nation Can Prosper<br>In Life Without Education</h1>
                                 <p data-animation="fadeInUp" data-delay=".4s">Sorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor <br> incididunt ut labore et dolore magna aliqua enim ad minime.</p>
-                                <button class="btn yellow-bg-btn" data-animation="fadeInUp" data-delay=".6s">admit now</button>
+                               
                             </div>
                         </div>
                     </div>
@@ -97,7 +165,7 @@
                             </div>
 
                             <div class="courses-wrapper-bottom courses-wrapper-bottom-2 d-flex justify-content-between">
-                                <div class="testimonilas-rating testimonilas-rating-2">
+                                {% comment %} <div class="testimonilas-rating testimonilas-rating-2">
                                     <ul>
                                      
                                         
@@ -111,7 +179,7 @@
                                        
 
                                     </ul>
-                                </div>
+                                </div> {% endcomment %}
                                 <div class="courses-button courses-button-2 text-uppercase">
                                     <a href="{% url 'course_detail' course.id %}">View Details</a>
                                 </div>
@@ -359,31 +427,31 @@
     <div class="counter-area gray-bg">
         <div class="container pt-90 pb-65">
             <div class="row">
-                <div class="col-xl-3 col-lg-3 col-md-3">
+                <div class="col-xl-4 col-lg-4 col-md-4">
                     <div class="couter-wrapper mb-30 text-center">
                         <img src="/static/assets/img/counter/counter_icon1.png" alt="">
-                        <span class="counter">10532</span>
+                        <span class="counter">{{s_count}}</span>
                         <h3>Satisfied Students</h3>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-3 col-md-3">
+                <div class="col-xl-4 col-lg-4 col-md-4">
                     <div class="couter-wrapper mb-30 text-center">
                         <img src="/static/assets/img/counter/counter_icon2.png" alt="">
-                        <span class="counter">7985</span>
+                        <span class="counter">{{c_count}}</span>
                         <h3>Courses Complated</h3>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-3 col-md-3">
+                {% comment %} <div class="col-xl-3 col-lg-3 col-md-3">
                     <div class="couter-wrapper mb-30 text-center">
                         <img src="/static/assets/img/counter/counter_icon3.png" alt="">
                         <span class="counter">5382</span>
                         <h3>Satisfied Students</h3>
                     </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-3">
+                </div> {% endcomment %}
+                <div class="col-xl-4 col-lg-4 col-md-4">
                     <div class="couter-wrapper mb-30 text-center">
                         <img src="/static/assets/img/counter/counter_icon4.png" alt="">
-                        <span class="counter">354</span>
+                    <span class="counter">{{t_count}}</span>
                         <h3>Expert Advisors</h3>
                     </div>
                 </div>
@@ -658,14 +726,14 @@
                 <div class="col-xl-4 col-lg-4 col-md-6">
                     <div class="blog-wrapper mb-30">
                         <div class="blog-thumb mb-25">
-                            <a href="news_details.html"><img src="/static/assets/img/blog/blog_thumb_1.jpg" alt=""></a>
+                            <a href="#"><img src="/static/assets/img/blog/blog_thumb_1.jpg" alt=""></a>
                             <span class="blog-category">news</span>
                         </div>
                         <div class="blog-content">
                             <div class="blog-meta">
                                 <span>Auguest 25, 2018</span>
                             </div>
-                            <h5><a href="news_details.html">Some say education is the process of gaining information is nation.</a></h5>
+                            <h5><a href="#">Some say education is the process of gaining information is nation.</a></h5>
                             <p>Belis nisl adipiscing sapien sed malesu diame lacus eget erat Cras mollis scele.</p>
                             <div class="blog-bottom-2 d-flex justify-content-between">
                                 <div class="admin-blog-info">
@@ -684,14 +752,14 @@
                 <div class="col-xl-4 col-lg-4 col-md-6">
                     <div class="blog-wrapper mb-30">
                         <div class="blog-thumb mb-25">
-                            <a href="news_details.html"><img src="/static/assets/img/blog/blog_thumb_2.jpg" alt=""></a>
+                            <a href="#"><img src="/static/assets/img/blog/blog_thumb_2.jpg" alt=""></a>
                             <span class="blog-category">news</span>
                         </div>
                         <div class="blog-content">
                             <div class="blog-meta">
                                 <span>Auguest 25, 2018</span>
                             </div>
-                            <h5><a href="news_details.html">Some say education is the process of gaining information is nation.</a></h5>
+                            <h5><a href="#">Some say education is the process of gaining information is nation.</a></h5>
                             <p>Belis nisl adipiscing sapien sed malesu diame lacus eget erat Cras mollis scele.</p>
                             <div class="blog-bottom-2 d-flex justify-content-between">
                                 <div class="admin-blog-info">
@@ -710,14 +778,14 @@
                 <div class="col-xl-4 col-lg-4 col-md-6">
                     <div class="blog-wrapper mb-30">
                         <div class="blog-thumb mb-25">
-                            <a href="news_details.html"><img src="/static/assets/img/blog/blog_thumb_3.jpg" alt=""></a>
+                            <a href="#"><img src="/static/assets/img/blog/blog_thumb_3.jpg" alt=""></a>
                             <span class="blog-category">news</span>
                         </div>
                         <div class="blog-content">
                             <div class="blog-meta">
                                 <span>Auguest 25, 2018</span>
                             </div>
-                            <h5><a href="news_details.html">Some say education is the process of gaining information is nation.</a></h5>
+                            <h5><a href="#">Some say education is the process of gaining information is nation.</a></h5>
                             <p>Belis nisl adipiscing sapien sed malesu diame lacus eget erat Cras mollis scele.</p>
                             <div class="blog-bottom-2 d-flex justify-content-between">
                                 <div class="admin-blog-info">

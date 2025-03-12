@@ -117,14 +117,14 @@
                                                     <div class="adivisor-text white-bg">
                                                         <div class="adivisor-text-heading d-flex mb-10">
                                                             <div class="adivisor-text-title">
-                                                                <h4>Alexzender Alex</h4>
-                                                                <span>CSE Teacher</span>
+                                                        <h4>{{course.teacher}}</h4>
+                                                                <span>{{course.category}} teacher</span>
                                                             </div>
                                                         </div>
                                                         <div class="adivisor-para">
-                                                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusa dolore mque laudantium totam rem aperiam eaqipsa quae ab illo inventore veritatvolup tatem quia voluptas sit aspernatur aut odit aut fugit sed quia conseque.</p>
+                                                            <p>{{course.teacher.profile.bio | default:"We are happy to be You"}}</p>
                                                         </div>
-                                                        <div class="advisors-social-icon-list">
+                                                        {% comment %} <div class="advisors-social-icon-list">
                                                             <ul>
                                                                 <li><a href="#"><span class="ti-facebook"></span></a></li>
                                                                 <li><a href="#"><span class="ti-twitter-alt"></span></a></li>
@@ -132,7 +132,7 @@
                                                                 <li><a href="#"><span class="ti-google"></span></a></li>
                                                                 <li><a href="#"><span class="ti-pinterest"></span></a></li>
                                                             </ul>
-                                                        </div>
+                                                        </div> {% endcomment %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -215,7 +215,7 @@
             </div>
         </div>
     </div>
-    {% if is_enrolled %}
+    {% if request.user.is_authenticated and is_enrolled  %}
     <div class="courses-view-more-area mt-20 mb-30 text-center">
         <div class="row">
             <div class="col-xl-12">
@@ -225,18 +225,81 @@
             </div>
         </div>
     </div> 
+    <div class="post-comments post-comments-padding white-bg mt-70 mb-30">
+        {% if comments %}
+        <div class="section-title mb-20">
+            <h2>Comments ({{comments.count}})</h2>
+        </div>
+        {% for c in comments %}
+        <div class="latest-comments">
+         
+           
+            <ul>
+                <li>
+                    <div class="comments-box main-comments d-flex">
+                        <div class="comments-avatar">
+                            <img src="/static/assets/img/logo/lmslogo.jpg" alt="">
+                        </div>
+                        <div class="comments-text">
+                            <div class="avatar-name">
+                                <h5>{{c.user}}</h5>
+                            </div>
+                            <p style='font'>{{c.comment}}</p>
+                            
+                        </div>
+                    </div>
+                  
+                </li>
+                
+            </ul>
+            {% endfor %}
+            {% else %}
+            <div class="section-title mb-20">
+                <h2>No Reviews</h2>
+            </div>
+
+           
+        </div>
+        {% endif %}
+        <div class="post-comments-form">
+            <div class="section-title mb-30">
+                <h2>Leave a Review</h2>
+            </div>
+            <form action="#" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                   
+                    <div class="col-xl-12">
+                        <textarea name="text" id="comments" cols="30" rows="10" placeholder="Your Comments"></textarea>
+                        <button class="btn blue-bg" type="submit">Comment</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     
     {% else %}
     <div class="courses-view-more-area mt-20 mb-30 text-center">
         <div class="row">
             <div class="col-xl-12">
+                {% if course.is_free %}
+                <div class="courses-view-more-btn">
+                   
+                <a href="{% url 'enroll_course' course.id %}"> <button class="btn gray-border-btn">Free Enroll</button></a>
+                </div>
+                {% else %}
+
                 <div class="courses-view-more-btn">
                 <a href="{% url 'enroll_course' course.id %}"> <button class="btn gray-border-btn"> Buy course</button></a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div> 
-    {% endif %}     
+    <br>
+    {% endif %} 
+    
+    
     
 
     
