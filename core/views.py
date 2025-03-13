@@ -12,10 +12,11 @@ from .decorators import is_enrolled
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 
-
+def is_instructor(user):
+    return user.groups.filter(name='Teacher').exists()
 
 # Home page with course listing
-@cache_page(60 * 15)  # Cache for 15 minutes
+@cache_page(60 * 10)  # Cache for 15 minutes
 def home(request):
     query = request.GET.get('q', '')
     courses = Course.objects.filter(
@@ -53,10 +54,14 @@ def course_list(request):
         'search_query': search_query,
     }
     return render(request, 'base/course/course_list.html', context)
-
-# Function to check if the user is in the "Instructor" group
-def is_instructor(user):
-    return user.groups.filter(name="Teacher").exists()
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.views.decorators.cache import cache_page
+from django.core.paginator import Paginator
+from django.db.models import Sum
+from .models import Course, Enrollment, Comment, Category, Assignment, CourseMaterial, Notification
+from .forms import PaymentForm, AssignmentSubmissionForm
 
 @cache_page(60 * 15)
 def course_detail(request, course_id):
@@ -111,6 +116,96 @@ def payment(request, course_id):
         messages.info(request, "This course requires payment. Please complete the payment form.")
     return render(request, 'base/payment.html', {'course': course})
 
+@login_required
+def submit_assignment(request, assignment_id):
+    assignment = get_object_or_404(Assignment, id=assignment_id)
+    
+    if not Enrollment.objects.filter(student=request.user, course=assignment.course).exists():
+        messages.error(request, "You are not enrolled in this course.")
+        return redirect('course_detail', course_id=assignment.course.id)
+    
+    if request.method == 'POST':
+        form = AssignmentSubmissionForm(request.POST, request.FILES)
+        if form.is_valid():
+            submission = form.save(commit=False)
+            submission.student = request.user
+            submission.assignment = assignment
+            submission.save()
+            messages.success(request, "Assignment submitted successfully.")
+            return redirect('course_detail', course_id=assignment.course.id)
+    else:
+        form = AssignmentSubmissionForm()
+    
+    return render(request, 'core/submit_assingment.html', {'form': form, 'assignment': assignment})
+
+@login_required
+@cache_page(60 * 10)
+def metarial_details(request, metarial_id):
+    metarial = get_object_or_404(CourseMaterial, id=metarial_id)
+    course = metarial.course
+    course_id = course.id
+    assignment = Assignment.objects.filter(course=course)
+    is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists()
+    if not is_enrolled:
+        messages.info(request, "You are not enrolled in this course.")
+        return redirect('course_detail', course_id=course_id)
+    
+    return render(request, 'base/metarial/metarials_details.html', { 
+        'metarial': metarial,
+        'assignments': assignment
+    })
+
+@login_required
+def user_coure_list(request):
+    courses = Enrollment.objects.filter(student=request.user) 
+    paginator = Paginator(courses, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'base/user/user_course_list.html', {
+        'courses': courses,
+        'page_obj': page_obj
+    })
+
+def dashboard(request):
+    return render(request, 'core/dashboard.html')
+
+@login_required
+@cache_page(60 * 10)
+def metarial_list(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    metarials = CourseMaterial.objects.filter(course=course).only('id', 'title', 'duration', 'image', 'description', 'uploaded_at')
+    paginator = Paginator(metarials, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'base/metarial/metarial_list.html', {'metarials': metarials, 'course': course, 'page_obj': page_obj})
+
+@login_required
+@cache_page(60 * 10)
+def assignment_list(request, course_id):
+    assignments = Assignment.objects.filter(id=course_id).order_by('-uploaded_at')
+    paginator = Paginator(assignments, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'base/assignment/assignment_list.html', {'assignments': page_obj})
+
+def notifications(request):
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(user=request.user).order_by('-id')
+        notifications.update(is_read=True)
+    return render(request, 'base/notifications.html', {'notification': notifications})
+
+def courses_category(request):
+    category_name = request.GET.get('category_name', None)
+    courses = Course.objects.filter(category__name=category_name)
+    paginator = Paginator(courses, 6)
+    page = request.GET.get('page')
+    courses_page = paginator.get_page(page)
+    return render(request, 'base/course/category_courses.html', {
+        'page_obj': courses_page,
+        'selected_category': category_name,
+    })
+
+
 class CreateCourse(CreateView):
     model = Course
     fields = ['title', 'description', 'category', 'price', 'image', 'duration', 'prerequisites', 'tags']
@@ -129,6 +224,8 @@ class CreateCourse(CreateView):
         context = super().get_context_data(**kwargs)
         context['cats'] = Category.objects.all()
         return context
+    
+
 
 class TeacherCourseUpdate(UpdateView):
     model = Course

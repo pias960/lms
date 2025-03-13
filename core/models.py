@@ -13,9 +13,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name 
-    
-
-
 
 
 class Course(models.Model):
@@ -96,9 +93,6 @@ def _post_save_receiver(sender, instance,created,**kwargs):
         Profile.objects.create(user=instance)
     
     
-    
-
-
 class Enrollment(models.Model):
     student = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='enrollments'
@@ -136,10 +130,6 @@ class CourseMaterial(models.Model):
     def __str__(self):
         return f"{self.title} ({self.course.title})"
     
-
-
-
-
 
 
 class Assignment(models.Model):
