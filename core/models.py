@@ -287,3 +287,17 @@ class Comment(models.Model):
     comment = models.CharField(max_length=400, blank=True, null=True)
     created_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Comments')
+
+
+
+
+class Applications(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=11)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    attachment = models.FileField(upload_to='applications/', null=True, blank=True)
+
+    def __str__(self):
+        return self.name

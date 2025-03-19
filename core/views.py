@@ -16,7 +16,7 @@ def is_instructor(user):
     return user.groups.filter(name='Teacher').exists()
 
 # Home page with course listing
-@cache_page(60 * 10)  # Cache for 15 minutes
+@cache_page(60 * 1)  # Cache for 15 minutes
 def home(request):
     query = request.GET.get('q', '')
     courses = Course.objects.filter(
@@ -24,7 +24,7 @@ def home(request):
     ) if query else Course.objects.all().order_by('-id')[:8]
     
     context = {
-        's_count': Course.objects.count(),
+        's_count': Enrollment.objects.count(),
         't_count': User.objects.filter(groups__name="Teacher").count(),
         'courses': courses,
         'c_count': Course.objects.count()
@@ -32,7 +32,7 @@ def home(request):
     return render(request, 'base/index.html', context)
 
 # Course listing with pagination
-@cache_page(60 * 10)  # Cache for 10 minutes
+@cache_page(60 * 1)  # Cache for 10 minutes
 def course_list(request):
     category_filter = request.GET.get('category')
     search_query = request.GET.get('search')
@@ -54,16 +54,8 @@ def course_list(request):
         'search_query': search_query,
     }
     return render(request, 'base/course/course_list.html', context)
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.views.decorators.cache import cache_page
-from django.core.paginator import Paginator
-from django.db.models import Sum
-from .models import Course, Enrollment, Comment, Category, Assignment, CourseMaterial, Notification
-from .forms import PaymentForm, AssignmentSubmissionForm
 
-@cache_page(60 * 15)
+@cache_page(60 * 1)
 def course_detail(request, course_id):
     categories = Category.objects.values('name')
     course = get_object_or_404(Course, id=course_id)
@@ -252,3 +244,16 @@ def teacher_course_delete(request, course_id):
     course.delete()
     messages.success(request, "Course deleted successfully.")
     return redirect('teacher_courses')
+
+def contact(request):
+    return render(request, 'base/contact_us.html')
+
+from . models import Applications
+class ApplicationsView(CreateView):
+    model = Applications
+    fields = ['name', 'email', 'phone', 'message','attachment']
+    template_name = 'base/contact_us.html'
+    success_url = reverse_lazy('home')
+    context_object_name = 'applications'
+
+   

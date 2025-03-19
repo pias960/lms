@@ -79,20 +79,18 @@
             </div>
         </div>
     </div>
-</div>
+</div >
 <!-- slider-end -->
 
-<div id='commit' style="padding-top: 50px; text-align: center;">
-    <h1>Login</h1>
-</div>
-
-<div class="advisors-area gray-bg pt-95 pb-70">
-    <div class="container">
+<div class="advisors-area gray-bg pt-95 pb-70" id="login-form">
+    <div class="container" >
         <div class="row">
             <div class="col-xl-8 offset-xl-2">
                 <div class="events-details-form faq-area-form mb-30 p-100">
                     <form method="POST" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
+                            <h2>Login</h2>
+                            <p>Fill the form below to login to your account</p>
                         <div class="row">
 
                             <!-- General Form Errors -->
@@ -131,12 +129,12 @@
                                 </div>
 
                              <!-- Google Sign-In Button -->
-                                <div class="text-center mt-3">
+                                {% comment %} <div class="text-center mt-3">
                                     <a href="https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=808992644106-dav50k4so6vtk78avi5ne9t7408836mh.apps.googleusercontent.com&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Faccounts%2Fgoogle%2Flogin%2Fcallback%2F&scope=profile%20email&response_type=code&state=kNV1J7VPii6tVV9D&access_type=online&code_challenge_method=S256&code_challenge=MHgiuAjvGm18a0UGEllrA_PCkWNSaCKzupxevBDDov0&service=lso&o2v=2&ddm=1&flowName=GeneralOAuthFlow">
                                         <button type="button" class="login-with-google-btn">Sign in with Google</button>
                                     </a>
                                     
-                                </div> 
+                                </div>  {% endcomment %}
 
                                 <!-- Links -->
                                 <div class="text-center mt-2">
@@ -157,7 +155,7 @@
 <!-- Smooth Scroll to Form -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var targetDiv = document.getElementById("commit");
+        var targetDiv = document.getElementById("login-form");
         if (targetDiv) {
             targetDiv.scrollIntoView({ behavior: "smooth", block: "start" });
         }

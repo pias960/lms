@@ -1,5 +1,5 @@
 from django import forms
-from .models import Payment, AssignmentSubmission
+from .models import Payment, AssignmentSubmission,Applications
 
 class PaymentForm(forms.ModelForm):
     class Meta:
@@ -11,3 +11,5 @@ class AssignmentSubmissionForm(forms.ModelForm):
     class Meta:
         model = AssignmentSubmission
         fields = ['file']
+
+
