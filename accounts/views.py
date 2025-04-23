@@ -69,26 +69,20 @@ from django.contrib.auth import authenticate, login
 from .forms import CustomAuthenticationForm
 
 def user_login(request):
+    form = None
     if request.method == 'POST':
-        form = CustomAuthenticationForm(request=request, data=request.POST)
+        form = CustomAuthenticationForm(data=request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']  # Get the username (either from email or actual username)
-            password = request.POST['password']  # Get password from the form submission
-            
+            password = form.cleaned_data['password']  # Get password from the form submission
             # Authenticate the user using the username
             user = authenticate(request, username=username, password=password)
-            
             if user is not None:
                 if user.is_active:
                     login(request, user)
                     return redirect('home')  # Redirect to a success page after login
-            else:
-                form.add_error(None, 'Invalid username/email or password')
-
-    else:
-        form = CustomAuthenticationForm()
-
     return render(request, 'accounts/login.html', {'form': form})
+
 
 
 

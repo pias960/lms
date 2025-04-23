@@ -16,7 +16,7 @@ def is_instructor(user):
     return user.groups.filter(name='Teacher').exists()
 
 # Home page with course listing
-@cache_page(60 * 1)  # Cache for 15 minutes
+ # Cache for 15 minutes
 def home(request):
     query = request.GET.get('q', '')
     courses = Course.objects.filter(
@@ -31,8 +31,7 @@ def home(request):
     }
     return render(request, 'base/index.html', context)
 
-# Course listing with pagination
-@cache_page(60 * 1)  # Cache for 10 minutes
+
 def course_list(request):
     category_filter = request.GET.get('category')
     search_query = request.GET.get('search')
@@ -55,7 +54,6 @@ def course_list(request):
     }
     return render(request, 'base/course/course_list.html', context)
 
-@cache_page(60 * 1)
 def course_detail(request, course_id):
     categories = Category.objects.values('name')
     course = get_object_or_404(Course, id=course_id)
